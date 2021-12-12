@@ -23,9 +23,9 @@ interface CircleProps {
 function Circle({ bgColor, borderColor, text = "default text" }: CircleProps) {
   //   const [counter, setCounter] = useState(1); Typescript가 초기값을 가지고 타입을 지정해줌
   // 하지만 만약에 string과 number를 동시에 사용하고 싶다면? 아래 처럼 작성
-  const [value, setValue] = useState<number | string>(0);
-  setValue(2);
-  setValue("Hello");
+  //   const [value, setValue] = useState<number | string>(0);
+  //   setValue(2);
+  //   setValue("Hello");
   return (
     <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
       {text}
