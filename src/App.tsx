@@ -63,6 +63,7 @@ body {
 }
 a {
   text-decoration:none;
+  color: inherit;
 }
 `; //렌더링 될 때, 그 컴포넌트는 전역 스코프에 스타일들을 올려준다.
 
