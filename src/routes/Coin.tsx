@@ -6,6 +6,8 @@ import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { useMatch } from "react-router-dom";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "./api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -150,16 +152,27 @@ interface IPriceData {
     };
   };
 }
+
+type TypeParmas = {
+  coinId: string;
+};
+
 function Coin() {
-  const [loading, setLoading] = useState(true);
-  const { coinId } = useParams();
+  const { coinId } = useParams() as TypeParmas;
   const { state } = useLocation();
-  const [info, setInfo] = useState<IInfodata>();
-  const [priceInfo, setPriceInfo] = useState<IPriceData>();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-  console.log(priceMatch);
-  // console.log(chartMatch);
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfodata>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId)
+  );
+  /*  const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState<IInfodata>();
+  const [priceInfo, setPriceInfo] = useState<IPriceData>();
   useEffect(() => {
     (async () => {
       // 코인의 정보
@@ -177,12 +190,13 @@ function Coin() {
       setPriceInfo(priceData);
       setLoading(false);
     })();
-  }, [coinId]);
+  }, [coinId]); */
+  const loading = infoLoading || tickersLoading;
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -192,22 +206,22 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"} </span>
+              <span>{infoData?.open_source ? "Yes" : "No"} </span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>max supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
           <Tabs>
