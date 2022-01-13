@@ -7,7 +7,7 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "react-query";
-import { fetchCoinInfo, fetchCoinTickers } from "./api";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -237,6 +237,7 @@ function Coin() {
             <Route path="chart" element={<Chart />} />
             <Route path="price" element={<Price />} />
           </Routes>
+          {/* <Outlet context={{ coinId: coinId }} /> */}
         </>
       )}
     </Container>
