@@ -34,7 +34,7 @@ function Chart() {
             //보내고 싶은 모든 데이터가 들어있음
             {
               name: "price",
-              data: data?.map((price) => Math.floor(price.close)),
+              data: data?.map((price) => price.close),
             },
           ]}
           options={{
@@ -60,11 +60,21 @@ function Chart() {
               show: false,
             },
             xaxis: {
-              labels: {
-                show: false,
-              },
+              labels: { show: false },
               axisTicks: { show: false },
               axisBorder: { show: false },
+              type: "datetime",
+              categories: data?.map((value) => value.time_close),
+            },
+            fill: {
+              type: "gradient",
+              gradient: { gradientToColors: ["#0be881"], stops: [0, 100] }, // start
+            },
+            colors: ["#0fbcf9"], // finish
+            tooltip: {
+              y: {
+                formatter: (value) => `$ ${value.toFixed(2)}`,
+              },
             },
           }}
         />
