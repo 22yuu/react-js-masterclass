@@ -9,6 +9,7 @@ import { useMatch } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
+import { FaArrowLeft } from "react-icons/fa";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -78,6 +79,11 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const BtnHome = styled(Header)`
+  position: absolute;
+  left: 250px;
 `;
 
 interface RouteParams {
@@ -207,6 +213,12 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <BtnHome>
+          {/* <FontAwesomeIcon icon={faArrowCircleLeft}> */}
+          <Link to="/">
+            <FaArrowLeft />
+          </Link>
+        </BtnHome>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
