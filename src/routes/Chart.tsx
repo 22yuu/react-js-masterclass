@@ -2,6 +2,8 @@ import { useQuery } from "react-query";
 import { useOutletContext, useParams } from "react-router";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 type TypeParmas = {
   coinId: string;
@@ -18,11 +20,10 @@ interface IHistorical {
   market_cap: number;
 }
 
-interface ChartProps {
-  isDark: boolean;
-}
+interface ChartProps {}
 
-function Chart({ isDark }: ChartProps) {
+function Chart({}: ChartProps) {
+  const isDark = useRecoilValue(isDarkAtom);
   const { coinId } = useParams() as TypeParmas;
   const { isLoading, data } = useQuery<IHistorical[]>(
     ["ohlcv", coinId],

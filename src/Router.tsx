@@ -5,16 +5,13 @@ import Coin from "./routes/Coin";
 import Coins from "./routes/Coins";
 import Price from "./routes/Price";
 
-interface IRouterProps {
-  toggleDark: () => void;
-  isDark: boolean;
-}
+interface IRouterProps {}
 
-function Router({ toggleDark, isDark }: IRouterProps) {
+function Router({}: IRouterProps) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/:coinId/*" element={<Coin isDark={isDark} />} />
+        <Route path="/:coinId/*" element={<Coin />} />
         {/* v6부터 자식 라우터를 사용할려면 /*를 붙여야한다. */}
         {/*
             아니면 아래의 코드처럼 사용 가능하다. 
@@ -31,7 +28,7 @@ function Router({ toggleDark, isDark }: IRouterProps) {
           <Route path="chart" element={<Chart />} />
           <Route path="price" element={<Price />} />
         </Route> */}
-        <Route path="/" element={<Coins toggleDark={toggleDark} />} />
+        <Route path="/" element={<Coins />} />
       </Routes>
     </BrowserRouter>
   );
