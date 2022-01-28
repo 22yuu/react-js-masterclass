@@ -4,6 +4,13 @@ import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../atoms";
+import { BeatLoader } from "react-spinners";
+import styled from "styled-components";
+
+const Loader = styled.span`
+  text-align: center;
+  display: block;
+`;
 
 type TypeParmas = {
   coinId: string;
@@ -35,15 +42,25 @@ function Chart({}: ChartProps) {
   return (
     <div>
       {isLoading ? (
-        "Loading chart..."
+        <Loader>
+          <BeatLoader color="#9c88ff" />
+        </Loader>
       ) : (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             //보내고 싶은 모든 데이터가 들어있음
             {
               name: "price",
-              data: data?.map((price) => price.close),
+              data: data?.map((price) => ({
+                x: price.time_close,
+                y: [
+                  price.open.toFixed(2),
+                  price.high.toFixed(2),
+                  price.low.toFixed(2),
+                  price.close.toFixed(2),
+                ],
+              })),
             },
           ]}
           options={{
@@ -51,6 +68,7 @@ function Chart({}: ChartProps) {
               mode: isDark ? "dark" : "light",
             },
             chart: {
+              type: "candlestick",
               height: 500,
               width: 500,
               toolbar: {
@@ -58,28 +76,21 @@ function Chart({}: ChartProps) {
               },
               background: "transparent",
             },
+            stroke: {
+              width: 1,
+            },
+            xaxis: {
+              type: "datetime",
+              axisBorder: {
+                show: false,
+              },
+              axisTicks: {
+                show: false,
+              },
+            },
             grid: {
               show: false,
             },
-            stroke: {
-              curve: "smooth",
-              width: 5,
-            },
-            yaxis: {
-              show: false,
-            },
-            xaxis: {
-              labels: { show: false },
-              axisTicks: { show: false },
-              axisBorder: { show: false },
-              type: "datetime",
-              categories: data?.map((value) => value.time_close),
-            },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["#0be881"], stops: [0, 100] }, // start
-            },
-            colors: ["#0fbcf9"], // finish
             tooltip: {
               y: {
                 formatter: (value) => `$ ${value.toFixed(2)}`,

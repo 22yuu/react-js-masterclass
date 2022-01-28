@@ -1,5 +1,3 @@
-import { privateEncrypt } from "crypto";
-import { useEffect, useState } from "react";
 import { Route, useLocation, useParams } from "react-router";
 import { Link, Routes } from "react-router-dom";
 import styled from "styled-components";
@@ -10,7 +8,7 @@ import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
 import { FaArrowLeft } from "react-icons/fa";
-
+import { BeatLoader } from "react-spinners";
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
@@ -22,6 +20,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const Title = styled.h1`
@@ -81,25 +80,10 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-const BtnHome = styled(Header)`
+const BtnHome = styled.div`
   position: absolute;
-  left: 250px;
+  left: 15px;
 `;
-
-interface RouteParams {
-  coinId: string;
-}
-
-interface RouteState {
-  name: string;
-}
-
-interface ITag {
-  id: string;
-  name: string;
-  coin_counter: number;
-  ico_counter: number;
-}
 
 interface IInfodata {
   id: string;
@@ -211,19 +195,21 @@ function Coin({}: ICoinProps) {
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </title>
       </Helmet>
+
       <Header>
-        <Title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </Title>
         <BtnHome>
-          {/* <FontAwesomeIcon icon={faArrowCircleLeft}> */}
           <Link to="/">
             <FaArrowLeft />
           </Link>
         </BtnHome>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </Title>
       </Header>
       {loading ? (
-        <Loader>Loading...</Loader>
+        <Loader>
+          <BeatLoader color="#9c88ff" />
+        </Loader>
       ) : (
         <>
           <Overview>
@@ -258,7 +244,10 @@ function Coin({}: ICoinProps) {
           </Tabs>
           <Routes>
             <Route path="chart" element={<Chart />} />
-            <Route path="price" element={<Price />} />
+            <Route
+              path="price"
+              element={<Price tickersData={tickersData?.quotes.USD} />}
+            />
           </Routes>
           {/* <Outlet context={{ coinId: coinId }} /> */}
         </>

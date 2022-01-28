@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { isDarkAtom } from "../atoms";
+import { MdOutlineDarkMode, MdDarkMode } from "react-icons/md";
+import { BeatLoader } from "react-spinners";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -18,6 +19,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const CoinList = styled.ul``;
@@ -56,6 +58,7 @@ const Img = styled.img`
   height: 35px;
   margin-right: 10px;
 `;
+
 interface ICoin {
   id: string;
   name: string;
@@ -66,10 +69,9 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {}
-
 function Coins() {
   const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const isDark = useRecoilValue(isDarkAtom);
   const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins); // react query 는 데이터를 지우지않고, 캐시로 저장함
   return (
@@ -79,10 +81,14 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>코인</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
+        <button onClick={toggleDarkAtom}>
+          {isDark ? <MdOutlineDarkMode /> : <MdDarkMode />}
+        </button>
       </Header>
       {isLoading ? (
-        <Loader>Loading...</Loader>
+        <Loader>
+          <BeatLoader color="#9c88ff" />
+        </Loader>
       ) : (
         <CoinList>
           {data?.slice(0, 100).map((coin) => (
@@ -95,7 +101,7 @@ function Coins() {
                   src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
                 />
                 {coin.name} &rarr;
-              </Link>{" "}
+              </Link>
               {/* a 태그는 새로고침 되므로 Link 사용!*/}
             </Coin>
           ))}
